@@ -1,59 +1,55 @@
 from datetime import date, datetime
 
 
-weekdays ={ 
+weekdays = {
     0: 'Monday',
-    1: 'Tuesday', 
-    2: 'Wednesday', 
-    3: 'Thursday', 
-    4: 'Friday', 
-    5: 'Saturday', 
-    6: 'Sunday',
-    }
-
+    1: 'Tuesday',
+    2: 'Wednesday',
+    3: 'Thursday',
+    4: 'Friday',
+    5: 'Monday',
+    6: 'Monday',
+}
 
 
 def get_birthdays_per_week(users):
-    
-    days={}
-    # print(users)
+
+    days = {}
     current_date = date.today()
-    # print('now=', current_date)
     if len(users) == 0:
-        users=[]
+        return {}
     for birthdays in users:
-        # print (birthdays)
-        # birth_date = datetime(birthdays.get('birthday'))
-        birth_date = birthdays.get('birthday')
-        birth_date = date(year=current_date.year, month = birth_date.month, day = birth_date.day )
-        # print(birth_date.weekday())
+        birth_date = (birthdays.get('birthday'))
+        birth_date = datetime(year=current_date.year + 1, month=birth_date.month,
+                              day=birth_date.day).date()  # for next year
         difference = birth_date - current_date
-        
-        # print (birth_date.weekday())
-        # print ("diff", difference.days)
+        if 0 <= int(difference.days) <= 6:
+            if days.get(weekdays.get(birth_date.weekday())):
+                days.get(weekdays.get(birth_date.weekday())).append(
+                    birthdays.get('name'))  # if exist
+            else:
+                days.update({str(weekdays.get(birth_date.weekday())): [
+                            birthdays.get('name')]})  # if new
 
-        if difference.days < 0 :
-           print('birth passed')
-        # else:
-        days.update( { weekdays.get(birth_date.weekday()) : birthdays.get('name')}) 
-           
+        birth_date = datetime(year=current_date.year, month=birth_date.month,
+                              day=birth_date.day).date()  # for this year
+        difference = birth_date - current_date
+        if 0 <= int(difference.days) <= 6:
+            if days.get(weekdays.get(birth_date.weekday())):
+                days.get(weekdays.get(birth_date.weekday())
+                         ).append(birthdays.get('name'))
+            else:
+                days.update(
+                    {str(weekdays.get(birth_date.weekday())): [birthdays.get('name')]})
 
-    print(days)
     return days
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
     users = [
-        {"name": "Jan Koum", "birthday": datetime(1976, 12, 12).date()},
-        # {"name": "Jana Koza", "birthday": datetime(2028, 10, 10).date()},
+        {"name": "Jan Koum", "birthday": datetime(1976, 9, 17).date()},
+        {"name": "Jana Koza", "birthday": datetime(1028, 9, 12).date()},
+        {"name": "NIK", "birthday": datetime(1020, 9, 19).date()},
     ]
 
     result = get_birthdays_per_week(users)
